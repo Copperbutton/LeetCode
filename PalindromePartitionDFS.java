@@ -8,7 +8,7 @@
  * 
  * [ ["aa","b"], ["a","a","b"] ]
  */
-public class Solution {
+public class PalindromePartitionDFS {
     public List<List<String>> partition(String s) {
         int length = s.length();
         boolean[][] isValidPalind = new boolean[length][length];

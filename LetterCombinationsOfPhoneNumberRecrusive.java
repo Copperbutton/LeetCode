@@ -10,7 +10,7 @@
  * Input:Digit string "23" Output: ["ad", "ae", "af", "bd", "be", "bf", "cd",
  * "ce", "cf"].
  **/
-public class Solution {
+public class LetterCombinationsOfPhoneNumberRecrusive {
     public List<String> letterCombinations(String digits) {
         String[] keyboard = { " ", "", "abc", "def", "ghi", "jkl", "mno",
             "pqrs", "tuv", "wxyz" };
