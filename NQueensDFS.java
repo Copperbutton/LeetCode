@@ -14,7 +14,7 @@
  * 
  * ["..Q.", // Solution 2 "Q...", "...Q", ".Q.."] ]
  */
-public class NQueueDFS {
+public class NQueenDFS {
     private final static String QUEUE = "Q";
     private final static String DOT = ".";
     private final static boolean available = true;
