@@ -11,10 +11,9 @@ public class MinimumPathSumDPRunningArray {
             return 0;
         int COL_NUM = grid[0].length;
         int[] minPath = new int[COL_NUM + 1];
-        for (int col = COL_NUM - 1; col >= 0; col --)
-            minPath[col] = grid[ROW_NUM - 1][col] + minPath[col + 1];
-        minPath[COL_NUM] = Integer.MAX_VALUE;
-        for (int row = ROW_NUM - 2; row >= 0; row --) {
+        Arrays.fill(minPath, Integer.MAX_VALUE);
+        minPath[COL_NUM - 1] = 0;
+        for (int row = ROW_NUM - 1; row >= 0; row --) {
             for (int col = COL_NUM - 1; col >= 0; col --) {
                 minPath[col] = grid[row][col] + Math.min(minPath[col], minPath[col + 1]);
             }
