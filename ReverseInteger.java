@@ -6,13 +6,10 @@
 
 public class ReverseInteger {
     public int reverse(int x) {
-        int absX = Math.abs(x);
         int result = 0;
-        while (absX > 0) {
-            result *= 10;
-            result += absX % 10;
-            absX /= 10;
+        for (; x != 0; x /= 10) {
+            result = result * 10 + x % 10;
         }
-        return x > 0 ? result : -result;
+        return result;
     }
-}
+}a
