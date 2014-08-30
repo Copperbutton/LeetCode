@@ -20,22 +20,20 @@
  *     }
  * }
  */
-
-public class RemoveNthNodeFromEndOfList.java {
+public class RemoveNthNodeFromEndOfList {
     public ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        ListNode prev = dummy, curr = head, next = head;
-        for (int count = 0; next != null; count++) {
+        ListNode prev = dummy, next = head;
+        for(int count = 0; next != null; count ++) {
             if (count >= n) {
-                head = head.next;
                 prev = prev.next;
             }
             next = next.next;
         }
-
-        if (head != null)
-            prev.next = head.next;
+        
+        if (prev.next != null)
+            prev.next = prev.next.next;
         return dummy.next;
     }
 }
