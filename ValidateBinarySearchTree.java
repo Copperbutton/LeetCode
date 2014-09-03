@@ -36,7 +36,7 @@ public class ValidateBinarySearchTree {
                 valid = false;
         }
 
-        if (root.right != null) {
+        if (valid && root.right != null) {
             tmp = root.right;
             while (tmp.left != null)
                 tmp = tmp.left;
