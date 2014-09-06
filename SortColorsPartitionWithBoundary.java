@@ -20,22 +20,23 @@
 
 public class SortColorsPartitionWithBoundary {
     public void sortColors(int[] A) {
-        int lower = partition(A, 1, 0, A.length - 1);
-        partition(A, 2, lower, A.length - 1);
+        int nextStart = partition(A, 1, 0);
+        partition(A, 2, nextStart);
     }
-
-    private int partition(int[] A, int bar, int lower, int upper) {
+    
+    private int partition(int[] A, int bar, int start) {
+        int lower = start, upper = A.length - 1;
         while (lower <= upper) {
             while (upper >= lower && A[upper] >= bar)
                 upper--;
-            while (lower <= upper && A[lower] < bar)
+            while (lower <= upper && A[lower] < bar )
                 lower++;
             if (lower < upper) {
                 int swap = A[lower];
                 A[lower++] = A[upper];
                 A[upper--] = swap;
             } else
-                lower++;
+                lower ++;
         }
         return upper + 1;
     }
