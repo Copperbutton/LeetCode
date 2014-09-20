@@ -8,46 +8,42 @@
  * "5", "/", "+"] -> (4 + (13 / 5)) -> 6
  */
 
-public class EvaluateReversePolishNotation {
+public class Solution {
     public int evalRPN(String[] tokens) {
-        int result = -1;
         Stack<String> stack = new Stack<String>();
-        for (String token : tokens) {
-            if (isOperator(token)) {
-                if (stack.size() < 2)
-                    break;
-                String right = stack.pop();
-                String left = stack.pop();
-                String res = caculate(left, right, token);
-                stack.push(res);
+        for (String str : tokens) {
+            if (str.matches("[-+*/]")) {
+                String result = strCaculate(stack.pop(), stack.pop(), str);
+                stack.push(result);
             } else {
-                stack.push(token);
+                stack.push(str);
             }
         }
-        if (stack.size() == 1)
-            result = Integer.parseInt(stack.peek());
-        return result;
+        return Integer.parseInt(stack.pop());
     }
-
-    private boolean isOperator(String token) {
-        return (token.equals("+") || token.equals("-") || token.equals("*") || token
-                .equals("/"));
-    }
-
-    private String caculate(String left, String right, String operator) {
-        int leftNum = Integer.parseInt(left);
-        int rightNum = Integer.parseInt(right);
-        int result = 0;
-        if (operator.equals("+")) {
-            result = leftNum + rightNum;
-        } else if (operator.equals("-")) {
-            result = leftNum - rightNum;
-        } else if (operator.equals("*")) {
-            result = leftNum * rightNum;
-        } else if (operator.equals("/")) {
-            if (rightNum != 0)
-                result = leftNum / rightNum;
+    
+    private String strCaculate(String value1, String value2, String operator) {
+        int ret = 0;
+        int val1 = Integer.parseInt(value1);
+        int val2 = Integer.parseInt(value2);
+        switch (operator) {
+            case "+":
+                ret = val1 + val2;
+                break;
+            case "-":
+                ret = val2 - val1;
+                break;
+            case "*":
+                ret = val1 * val2;
+                break;
+            case "/":
+                if (val1 == 0)
+                    throw new IllegalArgumentException();
+                ret = val2/val1;
+                break;
+            default:
+                break;
         }
-        return String.valueOf(result);
+        return String.valueOf(ret);
     }
 }
