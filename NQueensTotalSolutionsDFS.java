@@ -6,50 +6,37 @@
  **/
 
 public class NQueeenTotalSolutionsDFS {
-    private static final boolean available = true;
-    private static final boolean unavailable = false;
+    private boolean[] rowUsed;
+    private boolean[] colUsed;
+    private boolean[] leftDiagUsed;
+    private boolean[] rightDiagUsed;
     private int NORM;
-    private boolean[] column;
-    private boolean[] leftDiag;
-    private boolean[] rightDiag;
-    private int totalSolutions;
-
-    public int totalNQueens(int n) {
-        NORM = n - 1;
-        column = new boolean[n];
-        leftDiag = new boolean[2 * n - 1];
-        rightDiag = new boolean[2 * n - 1];
-        totalSolutions = 0;
-
-        for (int col = 0; col < n; col++)
-            column[col] = available;
-
-        for (int i = 0; i < 2 * n - 1; i++) {
-            leftDiag[i] = available;
-            rightDiag[i] = available;
-        }
-
-        findTotalSolutions(n, 0);
-        return totalSolutions;
+    public int totalNQueens(int N) {
+        rowUsed = new boolean[N];
+        colUsed = new boolean[N];
+        leftDiagUsed = new boolean[2*N - 1];
+        rightDiagUsed = new boolean[2*N - 1];
+        NORM = N - 1;
+        return findNQueueSolution(N, 0);
     }
-
-    private void findTotalSolutions(int N, int row) {
+    
+    private int findNQueueSolution(int N, int row) {
+        if (row == N)
+            return 1;
+        int solNum = 0;
+        rowUsed[row] = true;
         for (int col = 0; col < N; col++) {
-            if (column[col] == available && leftDiag[row + col] == available
-                    && rightDiag[row - col + NORM] == available) {
-                column[col] = unavailable;
-                leftDiag[row + col] = unavailable;
-                rightDiag[row - col + NORM] = unavailable;
-
-                if (row < N - 1)
-                    findTotalSolutions(N, row + 1);
-                else
-                    totalSolutions++;
-
-                column[col] = available;
-                leftDiag[row + col] = available;
-                rightDiag[row - col + NORM] = available;
-            }
+            if (colUsed[col] || leftDiagUsed[row + col] || rightDiagUsed[row - col + NORM])
+                continue;
+            rightDiagUsed[row - col + NORM] = true;
+            leftDiagUsed[row + col] = true;
+            colUsed[col] = true;
+            solNum += findNQueueSolution(N, row + 1);
+            colUsed[col] = false;
+            leftDiagUsed[row + col] = false;
+            rightDiagUsed[row - col + NORM] = false;
         }
+        rowUsed[row] = false;
+        return solNum;
     }
 }
