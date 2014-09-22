@@ -6,29 +6,19 @@
  * initialized in A and B are m and n respectively.
  */
 
-public class MergeSortedArray {
+public class Solution {
     public void merge(int A[], int m, int B[], int n) {
-        int indexA = m - 1, indexB = n - 1, mergeIndex = m + n - 1;
-        while (mergeIndex >= 0) {
-            int next = 0;
-            if (indexA >= 0 && indexB >= 0) {
-                if (A[indexA] > B[indexB]) {
-                    next = A[indexA];
-                    indexA--;
-                } else {
-                    next = B[indexB];
-                    indexB--;
-                }
-            } else if (indexA >= 0) {
-                next = A[indexA];
-                indexA--;
-            } else if (indexB >= 0) {
-                next = B[indexB];
-                indexB--;
+        int indx1 = m -1;
+        int indx2 = n - 1;
+        int indx3 = m + n - 1;
+        while (indx3 >= 0) {
+            if (indx1 >= 0 && indx2 >= 0) {
+                A[indx3--] = A[indx1] > B[indx2] ? A[indx1--] : B[indx2--];
+            } else if (indx1 >= 0) {
+                A[indx3--] = A[indx1--];
+            } else if (indx2 >= 0) {
+                A[indx3--] = B[indx2--];
             }
-
-            A[mergeIndex] = next;
-            mergeIndex--;
         }
     }
 }
