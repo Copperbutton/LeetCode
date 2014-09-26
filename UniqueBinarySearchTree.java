@@ -12,15 +12,13 @@
  */
 public class Solution {
     public int numTrees(int n) {
-        int[] bst = new int[n + 1];
-        bst[0] = 1;
-        bst[1] = 1;
-        for (int i = 2; i <= n; i ++) {
-            for (int j = 1; j <= i; j ++) {
-                int tmp = bst[j - 1] * bst[i - j];
-                bst[i] += tmp;
+        int[] num = new int[n + 1];
+        num[0] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < i; j++) {
+                num[i] += num[j] * num[i - j - 1];
             }
         }
-        return bst[n];
+        return num[n];
     }
 }
