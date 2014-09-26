@@ -11,42 +11,42 @@
 
 public class SubstringWithConcatenationofAllWords {
     public List<Integer> findSubstring(String S, String[] L) {
-        List<Integer> result = new ArrayList<Integer>();
-        int lSize = L.length;
-        if (lSize == 0)
-            return result;
-        int lLen = L[0].length();
-        Map<String, Integer> expected = new HashMap<String, Integer>();
+        List<Integer> indexs = new ArrayList<Integer> ();
+        if (L.length == 0)
+            return indexs;
+            
+        Map<String, Integer> expected = new HashMap<String, Integer> ();
         Map<String, Integer> found = new HashMap<String, Integer>();
-        for (String s : L) {
+        for (String str : L) {
             int count = 1;
-            if (expected.containsKey(s))
-                count = expected.get(s) + 1;
-            else
-                found.put(s, 0);
-            expected.put(s, count);
+            if (expected.containsKey(str))
+                count = expected.get(str) + 1;
+            expected.put(str, count);
         }
-
-        for (int start = 0; start <= S.length() - lSize * lLen; start++) {
-            int count = 0;
-            for (int i = 0; i < lSize; i++) {
-                String sub = S.substring(start + i * lLen, start + (i + 1)
-                        * lLen);
-                if (expected.containsKey(sub)
-                        && found.get(sub) < expected.get(sub)) {
-                    count++;
-                    found.put(sub, found.get(sub) + 1);
-                } else
+        initMap(found, L);
+        
+        int len = L[0].length();
+        int concatLen = len * L.length;
+        for (int start = 0; start <= S.length() - concatLen; start ++) {
+            int offset = 0;
+            while(offset < concatLen) {
+                String target = S.substring(start + offset, start + offset + len);
+                if (!expected.containsKey(target) || found.get(target) >= expected.get(target))
                     break;
+                found.put(target, found.get(target) + 1);
+                if (offset + len == concatLen)
+                    indexs.add(start);
+                offset += len;
             }
-            if (count == lSize) {
-                result.add(start);
-            }
-            if (count > 0) {
-                for (String str : found.keySet())
-                    found.put(str, 0);
-            }
+            if (offset > 0)
+                initMap(found, L);
         }
-        return result;
+        return indexs;
     }
+    
+    private void initMap(Map<String, Integer> map, String[] L) {
+        for (String str : L)
+            map.put(str, 0);
+    }
+}
 }
