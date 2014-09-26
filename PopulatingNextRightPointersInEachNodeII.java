@@ -44,19 +44,23 @@
 
 public class PopulatingNextRightPointersInEachNodeII {
     public void connect(TreeLinkNode root) {
-        if (root == null)
-            return;
         TreeLinkNode dummy = new TreeLinkNode(-1);
-        for (TreeLinkNode prev = dummy, curr = root; curr != null; curr = curr.next) {
-            if (curr.left != null) {
-                prev.next = curr.left;
-                prev = curr.left;
-            }
-            if (curr.right != null) {
-                prev.next = curr.right;
-                prev = curr.right;
+        dummy.next = root;
+        while (dummy.next != null) {
+            TreeLinkNode prev = dummy;
+            TreeLinkNode curr = dummy.next;
+            dummy.next = null; 
+            while(curr != null) {
+                if (curr.left != null) {
+                    prev.next = curr.left;
+                    prev = prev.next;
+                }
+                if (curr.right != null) {
+                    prev.next = curr.right;
+                    prev = prev.next;
+                }
+                curr = curr.next;
             }
         }
-        connect(dummy.next);
     }
 }
