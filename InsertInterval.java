@@ -17,34 +17,21 @@
  * e; } }
  */
 public class InsertInterval {
-    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-        int insertPos = 0;
-        while (insertPos < intervals.size()) {
-            int start = intervals.get(insertPos).start;
-            int end = intervals.get(insertPos).end;
-            if (newInterval.start < start)
+        public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        int pos = 0;
+        while (pos < intervals.size()) {
+            Interval currInterval = intervals.get(pos);
+            if (newInterval.start > currInterval.end) {
+                pos ++;
+            } else if (newInterval.end < currInterval.start) {
                 break;
-            else if (newInterval.start >= start && newInterval.start <= end) {
-                newInterval.start = start;
-                break;
-            } else if (newInterval.start > end)
-                insertPos++;
-        }
-
-        while (insertPos < intervals.size()) {
-            int start = intervals.get(insertPos).start;
-            int end = intervals.get(insertPos).end;
-            if (newInterval.end < start) {
-                break;
-            } else if (newInterval.end >= start && newInterval.end <= end) {
-                newInterval.end = end;
-                intervals.remove(insertPos);
-                break;
-            } else if (newInterval.end > end) {
-                intervals.remove(insertPos);
+            } else {
+                newInterval.start = Math.min(currInterval.start, newInterval.start);
+                newInterval.end = Math.max(currInterval.end, newInterval.end);
+                intervals.remove(pos);
             }
         }
-        intervals.add(insertPos, newInterval);
+        intervals.add(pos, newInterval);
         return intervals;
     }
 }
