@@ -9,22 +9,22 @@
 
 public class CombinationRecrusive {
     public List<List<Integer>> combine(int n, int k) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        findCombination(result, 0, n, k, new ArrayList<Integer>());
+        List<List<Integer>> result = new ArrayList<List<Integer>> ();
+        findCombine(n, k, 1, new LinkedList<Integer> (), result);
         return result;
     }
     
-    private void findCombination(List<List<Integer>> result, int start,
-                                 int end, int leftNum, List<Integer> path) {
-        if (leftNum == 0) {
-            result.add(new ArrayList<Integer>(path));
+    private void findCombine(int n, int k, int start, LinkedList<Integer> path, List<List<Integer>> result) {
+        if (path.size() == k|| path.size() + (n - start + 1) < k) {
+            if (path.size() == k)
+                result.add(new ArrayList<Integer>(path));
             return;
         }
         
-        for (int i = start + 1; i <= end; i++) {
-            path.add(i);
-            findCombination(result, i, end, leftNum - 1, path);
-            path.remove(path.size() - 1);
+        for (int index = start; index <= n; index ++) {
+            path.addLast(index);
+            findCombine(n, k, start + 1, path, result);
+            path.removeLast();
         }
     }
 }
