@@ -23,16 +23,21 @@ public class ReverseLinkedListII {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
         ListNode prev = dummy;
-        for (int i = 0; i < m - 1; i++)
-            prev = prev.next;
-
-        ListNode curr = prev.next;
-        ListNode next = curr.next;
-        for (int count = m; count < n; count++) {
-            curr.next = next.next;
-            next.next = prev.next;
-            prev.next = next;
-            next = curr.next;
+        ListNode curr = head;
+        ListNode next = head == null ? null : head.next;
+        for (int count = 1; count < n; count ++) {
+            if (count < m) {
+                prev = prev.next;
+                curr = curr.next;
+                next = next.next;
+            }
+            
+            if (count >= m) {
+                curr.next = next.next;
+                next.next = prev.next;
+                prev.next = next;
+                next = curr.next;
+            }
         }
         return dummy.next;
     }
