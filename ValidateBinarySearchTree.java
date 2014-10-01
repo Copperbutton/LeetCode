@@ -21,29 +21,30 @@ public class ValidateBinarySearchTree {
     public boolean isValidBST(TreeNode root) {
         if (root == null)
             return true;
-        return isValidBSTRoot(root) && isValidBST(root.left)
-                && isValidBST(root.right);
+        TreeNode prev = findPrev(root);
+        if (prev != null && prev.val >= root.val)
+            return false;
+        TreeNode next = findNext(root);
+        if (next != null && next.val <= root.val)
+            return false;
+        return isValidBST(root.left) && isValidBST(root.right);
     }
-
-    public boolean isValidBSTRoot(TreeNode root) {
-        TreeNode tmp = null;
-        boolean valid = true;
-        if (root.left != null) {
-            tmp = root.left;
-            while (tmp.right != null)
-                tmp = tmp.right;
-            if (root.val <= tmp.val)
-                valid = false;
-        }
-
-        if (valid && root.right != null) {
-            tmp = root.right;
-            while (tmp.left != null)
-                tmp = tmp.left;
-            if (root.val >= tmp.val)
-                valid = false;
-        }
-
-        return valid;
+    
+    private TreeNode findPrev(TreeNode root) {
+        if (root == null || root.left == null)
+            return null;
+        TreeNode tmp = root.left;
+        while (tmp.right != null)
+            tmp = tmp.right;
+        return tmp;
+    }
+    
+    private TreeNode findNext(TreeNode root) {
+        if (root == null || root.right == null)
+            return null;
+        TreeNode tmp = root.right;
+        while (tmp.left != null)
+            tmp = tmp.left;
+        return tmp;
     }
 }
