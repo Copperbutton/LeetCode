@@ -9,45 +9,39 @@
 
 public class Solution {
     public List<String> restoreIpAddresses(String s) {
-        List<String> result = new ArrayList<String>();
-        findValidIPAddress(s, result, 0, 0, new LinkedList<String>());
+        List<String> result = new ArrayList<String> ();
+        if (s != null)
+            searchIPAddress(s, 0, new LinkedList<String> (), result);
         return result;
     }
-
-    private void findValidIPAddress(String s, List<String> result,
-            int startIndex, int depth, LinkedList<String> path) {
-        if (depth == 4) {
-            if (startIndex == s.length())
-                result.add(converToIPAddress(path));
+    
+    private void searchIPAddress(String s, int start, LinkedList<String> path, List<String> result) {
+        if (start == s.length() || path.size() == 4) {
+            if (start == s.length() && path.size() == 4) {
+                result.add(concatList(path));
+            }
             return;
         }
-
-        for (int index = startIndex + 1; index <= s.length()
-                && index <= startIndex + 3; index++) {
-            String nextAddr = s.substring(startIndex, index);
-            if (isValidIPAddress(nextAddr)) {
-                path.add(nextAddr);
-                findValidIPAddress(s, result, index, depth + 1, path);
-                path.removeLast();
-            }
+        
+        for (int index = start; index < s.length() && index < start + 3; index ++) {
+            String subStr = s.substring(start, index + 1);
+            int value = Integer.parseInt(subStr);
+            if (value > 255 || (subStr.length() > 1 && subStr.charAt(0) == '0'))
+                return;
+            path.add(subStr);
+            searchIPAddress(s, index + 1, path, result);
+            path.removeLast();
         }
     }
-
-    private boolean isValidIPAddress(String addr) {
-        if (addr.length() > 3 || (addr.startsWith("0") && addr.length() > 1))
-            return false;
-
-        int valueOfAddr = Integer.parseInt(addr);
-        return (valueOfAddr >= 0 && valueOfAddr <= 255);
-    }
-
-    private String converToIPAddress(List<String> path) {
+    
+    private String concatList(List<String> list) {
         StringBuilder builder = new StringBuilder();
-        for (String p : path) {
-            builder.append(p);
+        for (String str : list) {
+            builder.append(str);
             builder.append(".");
         }
         builder.setLength(builder.length() - 1);
         return builder.toString();
+        
     }
 }
