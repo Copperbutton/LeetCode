@@ -12,29 +12,26 @@
  */
 public class CombinationSumDFS {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
         Arrays.sort(candidates);
-        findCombinationSum(candidates, target, 0, new LinkedList<Integer>(),
-                result);
+        List<List<Integer>> result = new ArrayList<List<Integer>> ();
+        findCombination(candidates, 0, new LinkedList<Integer> (), result, target);
         return result;
     }
-
-    private void findCombinationSum(int[] candidates, int target, int index,
-            LinkedList<Integer> path, List<List<Integer>> result) {
-        if (target == 0) {
-            result.add(new LinkedList<Integer>(path));
+    
+    private void findCombination(int[] candidates, int start, LinkedList<Integer> path, List<List<Integer>> result, int target) {
+        if (start == candidates.length || target <= 0) {
+            if (target == 0) {
+                result.add(new ArrayList<Integer> (path));
+            }
             return;
         }
-
-        for (int i = index; i < candidates.length; i++) {
-            int nextValue = candidates[i];
-            if (nextValue <= target) {
-                path.add(nextValue);
-                findCombinationSum(candidates, target - nextValue, i, path,
-                        result);
-                path.removeLast();
-            } else
-                break;
+        
+        for (int index = start; index < candidates.length; index ++) {
+            int val = candidates[index];
+            path.add(val);
+            findCombination(candidates, index, path, result, target - val);
+            path.removeLast();
         }
+        
     }
 }
