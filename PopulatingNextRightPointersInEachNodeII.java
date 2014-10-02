@@ -43,21 +43,21 @@
  */
 
 public class PopulatingNextRightPointersInEachNodeII {
-    public void connect(TreeLinkNode root) {
+     public void connect(TreeLinkNode root) {
         TreeLinkNode dummy = new TreeLinkNode(-1);
         dummy.next = root;
         while (dummy.next != null) {
-            TreeLinkNode prev = dummy;
             TreeLinkNode curr = dummy.next;
-            dummy.next = null; 
-            while(curr != null) {
+            TreeLinkNode next = dummy;
+            dummy.next = null;
+            while (curr != null) {
                 if (curr.left != null) {
-                    prev.next = curr.left;
-                    prev = prev.next;
+                    next.next =curr.left;
+                    next = next.next;
                 }
                 if (curr.right != null) {
-                    prev.next = curr.right;
-                    prev = prev.next;
+                    next.next = curr.right;
+                    next = next.next;
                 }
                 curr = curr.next;
             }
