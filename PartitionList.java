@@ -23,26 +23,25 @@ public class PartitionList {
     public ListNode partition(ListNode head, int x) {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        ListNode prev = dummy, curr = head;
+        ListNode prev = dummy;
+        ListNode curr = head;
         while (curr != null && curr.val < x) {
             prev = prev.next;
             curr = curr.next;
         }
-
-        ListNode next = null;
-        if (curr != null)
-            next = curr.next;
+        
+        ListNode next = curr == null ? null : curr.next;
         while (next != null) {
             if (next.val >= x) {
                 curr = curr.next;
                 next = next.next;
-                continue;
+            } else {
+                curr.next = next.next;
+                next.next = prev.next;
+                prev.next = next;
+                prev = prev.next;
+                next = curr.next;
             }
-            curr.next = next.next;
-            next.next = prev.next;
-            prev.next = next;
-            prev = prev.next;
-            next = curr.next;
         }
         return dummy.next;
     }
