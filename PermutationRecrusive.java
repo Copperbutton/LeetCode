@@ -6,24 +6,24 @@
  **/
 public class PermutationRecrusive {
     public List<List<Integer>> permute(int[] num) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        findPermutation(num, result, new ArrayList<Integer>());
+        List<List<Integer>> result = new ArrayList<List<Integer>> ();
+        findPermutation(num, new boolean[num.length], new LinkedList<Integer> (), result);
         return result;
     }
     
-    private void findPermutation(int[] num, List<List<Integer>> result,
-                                 List<Integer> path) {
+    private void findPermutation(int[] num, boolean[] used, LinkedList<Integer> path, List<List<Integer>> result) {
         if (path.size() == num.length) {
-            result.add(new ArrayList<Integer>(path));
+            result.add(new ArrayList<Integer> (path));
             return;
         }
-        
-        for (int n : num) {
-            if (path.contains(n))
+        for (int i = 0; i < num.length; i++) {
+            if (used[i])
                 continue;
-            path.add(n);
-            findPermutation(num, result, path);
-            path.remove(path.size() - 1);
+            used[i] = true;
+            path.add(num[i]);
+            findPermutation(num, used, path, result);
+            path.removeLast();
+            used[i] = false;
         }
     }
 }
