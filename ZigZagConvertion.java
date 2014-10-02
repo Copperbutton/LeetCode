@@ -17,18 +17,16 @@ public class ZigZagConvertion {
             return s;
 
         List<List<Character>> matrix = new ArrayList<List<Character>>();
-        char[] sArray = s.toCharArray();
         for (int i = 0; i < s.length(); i++) {
             int index = i % (nRows + nRows - 2);
             if (index < nRows) {
                 if (index == matrix.size())
                     matrix.add(new ArrayList<Character>());
             } else {
-                int newIndex = index - nRows;
-                index = nRows - 2 - newIndex;
+                index -= nRows;
+                index = nRows - 2 - index;
             }
-            List<Character> row = matrix.get(index);
-            row.add(sArray[i]);
+            matrix.get(index).add(s.charAt(i));
         }
 
         StringBuilder builder = new StringBuilder();
