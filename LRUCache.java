@@ -10,90 +10,122 @@
  */
 
 public class LRUCache {
-    private class DoubleLinkedListNode {
-        private int key;
-        private int val;
-        public DoubleLinkedListNode prev;
-        public DoubleLinkedListNode next;
+    class Node<K, V> {
+        K key;
+        V value;
+        Node<K, V> prev;
+        Node<K, V> next;
 
-        public DoubleLinkedListNode(int key, int val) {
+        public Node(K key, V value) {
             this.key = key;
-            this.val = val;
-            prev = null;
-            next = null;
+            this.value = value;
+            this.prev = null;
+            this.next = null;
+        }
+
+        public Node() {
+            this.key = null;
+            this.value = null;
+            this.prev = null;
+            this.next = null;
         }
     }
 
-    private class DoubleLinkedList {
-        private DoubleLinkedListNode HEAD = new DoubleLinkedListNode(-1, -1);
-        private DoubleLinkedListNode TAIL = new DoubleLinkedListNode(-1, -1);
+    class DoubleLinkedList<K, V> {
+        public Node<K, V> HEAD = new Node<K, V>();
+        public Node<K, V> TAIL = new Node<K, V>();
+        private int size;
 
         public DoubleLinkedList() {
             HEAD.next = TAIL;
             TAIL.prev = HEAD;
+            this.size = 0;
         }
 
-        public DoubleLinkedListNode getLast() {
-            if (TAIL.prev != HEAD)
-                return TAIL.prev;
-            else
-                return null;
+        /** Add to tail */
+        public void add(K key, V value) {
+            Node<K, V> newNode = new Node<K, V>(key, value);
+            add(newNode);
         }
 
-        public void remove(DoubleLinkedListNode node) {
+        public void add(Node<K, V> newNode) {
+            TAIL.prev.next = newNode;
+            newNode.prev = TAIL.prev;
+            newNode.next = TAIL;
+            TAIL.prev = newNode;
+            size++;
+        }
+
+        /** Remove Node */
+        public void remove(Node<K, V> node) {
+            if (node == HEAD || node == TAIL || node == null)
+                return;
             node.prev.next = node.next;
             node.next.prev = node.prev;
-            node.prev = null;
             node.next = null;
+            node.prev = null;
+            size--;
         }
 
-        public void moveToFront(DoubleLinkedListNode node) {
-            node.next = HEAD.next;
-            HEAD.next.prev = node;
-            node.prev = HEAD;
-            HEAD.next = node;
+        public Node<K, V> getLast() {
+            return HEAD.next == TAIL ? null : HEAD.next;
         }
     }
 
-    private Map<Integer, DoubleLinkedListNode> map = new HashMap<Integer, DoubleLinkedListNode>();
-    private DoubleLinkedList cacheList = new DoubleLinkedList();
-    private int size = 0;
+    /**
+     * Use a double linked list to maintain, because need to remove elements
+     * very frequently. Single list can be used to implements queue, but queue
+     * not appropriate since not support remove any. With three functions, add
+     * and remove and geLast, we can maintain a LRU cache.
+     */
+    private DoubleLinkedList<Integer, Integer> cache;
+
+    /**
+     * Double Linked List can add and remove very quick, but can not random
+     * access. So here we use a map to record the nodes.
+     */
+    private Map<Integer, Node<Integer, Integer>> map;
     private int capacity;
 
     public LRUCache(int capacity) {
+        if (capacity <= 0)
+            throw new IllegalArgumentException(
+                    "Error: Illegal Argument, capacity must be positive.");
+        cache = new DoubleLinkedList<Integer, Integer>();
+        map = new HashMap<Integer, Node<Integer, Integer>>();
         this.capacity = capacity;
     }
 
     public int get(int key) {
-        int value = -1;
-        if (map.containsKey(key)) {
-            DoubleLinkedListNode node = map.get(key);
-            cacheList.remove(node);
-            cacheList.moveToFront(node);
-            value = node.val;
-        }
-        return value;
+        if (!map.containsKey(key))
+            return -1;
+        Node<Integer, Integer> node = map.get(key);
+        cache.remove(node);
+        cache.add(node);
+        return node.value;
     }
 
     public void set(int key, int value) {
-        DoubleLinkedListNode node;
-        if (map.containsKey(key)) {
-            node = map.get(key);
-            cacheList.remove(node);
-            node.val = value;
-        } else {
-            if (size == capacity) {
-                DoubleLinkedListNode lastNode = cacheList.getLast();
-                if (lastNode != null) {
-                    cacheList.remove(lastNode);
-                    size--;
-                    map.remove(lastNode.key);
-                }
+        if (!map.containsKey(key)) {
+            /**
+             * Design Decision: cache does not maintain size, list should
+             * maintain it.
+             */
+            if (cache.size == capacity) {
+                Node<Integer, Integer> last = cache.getLast();
+                cache.remove(last);
+                map.remove(last.key);
             }
-            node = new DoubleLinkedListNode(key, value);
-            size++;
-            map.put(key, node);
+            Node<Integer, Integer> newNode = new Node<Integer, Integer>(key,
+                    value);
+            cache.add(newNode);
+            map.put(key, newNode);
+        } else {
+            Node<Integer, Integer> node = map.get(key);
+            node.value = value;
+            cache.remove(node);
+            cache.add(node);
         }
-        cacheList.moveToFront(node);
     }
+
 }
