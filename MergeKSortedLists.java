@@ -12,30 +12,34 @@
 
 public class MergeKSortedLists {
     public ListNode mergeKLists(List<ListNode> lists) {
-        ListNode result = lists.size() > 0 ? lists.get(0) : null;
-        for (int i = 1; i < lists.size(); i++) {
-            result = mergeTwoLists(result, lists.get(i));
+        while (lists != null && lists.size() > 1) {
+            int left = 0;
+            int right = lists.size() - 1;
+            List<ListNode> newLists = new ArrayList<ListNode> ();
+            while (left < right) {
+                ListNode newNode = mergeTwoLists(lists.get(left ++), lists.get(right --));
+                newLists.add(newNode);
+            }
+            if (left == right)
+                newLists.add(lists.get(left));
+            lists = newLists;
         }
-        return result;
+        return lists == null || lists.size() == 0 ? null : lists.get(0);
     }
     
-    private ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    private ListNode mergeTwoLists(ListNode one, ListNode two) {
         ListNode dummy = new ListNode(-1);
-        dummy.next = list1;
-        ListNode prev = dummy;
-        while (list1 != null && list2 != null) {
-            if (list1.val > list2.val) {
-                prev.next = list2;
-                prev = prev.next;
-                list2 = list2.next;
-                prev.next = list1;
-            } else {
-                prev = prev.next;
-                list1 = list1.next;
-            }
+        dummy.next = one;
+        ListNode pOne = dummy;
+        ListNode pTwo = two;
+        while (pTwo != null) {
+            two = two.next;
+            while (pOne.next != null && pOne.next.val < pTwo.val)
+                pOne = pOne.next;
+            pTwo.next = pOne.next;
+            pOne.next = pTwo;
+            pTwo = two;
         }
-        if (list2 != null)
-            prev.next = list2;
         return dummy.next;
     }
 }
