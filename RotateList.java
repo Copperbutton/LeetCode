@@ -19,34 +19,42 @@ public class RotateList {
     public ListNode rotateRight(ListNode head, int n) {
         if (head == null)
             return head;
-
+        int size = getSize(head);
+        n %= size;
+        
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
-        ListNode prev = dummy, curr = dummy, next = head;
+        ListNode first = dummy;
+        ListNode second = dummy;
+        
         int count = 0;
-        while (next != null) {
-            next = next.next;
-            count++;
+        /** 
+         * Here use next != null instead of second != null, so that
+         * can insert front directly.
+         */
+        while (second.next != null) {
+            if (count >= n)
+                first = first.next;
+            second = second.next;
+            count ++;
         }
-        n %= count;
-
-        count = 0;
-        next = dummy;
-        while (next != null) {
-            if (count > n)
-                curr = curr.next;
-            next = next.next;
-            count++;
-        }
-        next = curr.next;
-
-        while (prev != curr && next != null) {
-            curr.next = next.next;
-            next.next = prev.next;
-            prev.next = next;
-            prev = prev.next;
-            next = curr.next;
+        
+	/** Incase count n == 0*/
+        if (first != second) {
+            ListNode head2 = first.next;
+            first.next = null;
+            second.next = dummy.next;
+            dummy.next = head2;
         }
         return dummy.next;
+    }
+    
+    private int getSize(ListNode head) {
+        int size = 0;
+        while (head != null) {
+            head = head.next;
+            size++;
+        }
+        return size;
     }
 }
