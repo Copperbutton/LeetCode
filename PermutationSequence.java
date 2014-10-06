@@ -11,33 +11,33 @@
  */
 
 public class PermutationSequence {
+public class Solution {
     public String getPermutation(int n, int k) {
-        int[] factorialArray = getFactorialArray(n - 1);
-        int[] permutation = new int[n];
+        char[] array = new char[n];
         for (int i = 0; i < n; i++)
-            permutation[i] = i + 1;
-
-        k -= 1;
+            array[i] = (char)(i + '1');
+        k--;
+        k %= getFactorial(n);
         for (int i = 0; i < n; i++) {
-            int index = k / factorialArray[n - 1 - i];
-            int tmp = permutation[i];
-            permutation[i] = permutation[i + index];
-            permutation[i + index] = tmp;
-            k = k % factorialArray[n - 1 - i];
-            Arrays.sort(permutation, i + 1, n);
+            int factoral = getFactorial(n - i - 1);
+            int index = k/factoral;
+            swap(array, i, i + index);
+            Arrays.sort(array, i + 1, n);
+            k %= factoral;
         }
-
-        StringBuilder builder = new StringBuilder();
-        for (int digit : permutation)
-            builder.append(digit);
-        return builder.toString();
+        return new String(array);
     }
-
-    private int[] getFactorialArray(int n) {
-        int[] factorialArray = new int[n + 1];
-        factorialArray[0] = 1;
-        for (int i = 1; i <= n; i++)
-            factorialArray[i] = i * factorialArray[i - 1];
-        return factorialArray;
+    
+    public int getFactorial(int n) {
+        int result = 1;
+        while (n > 1)
+            result *= n--;
+        return result;
+    }
+    
+    public void swap(char[] array, int first, int second) {
+        char tmp = array[first];
+        array[first] = array[second];
+        array[second] = tmp;
     }
 }
