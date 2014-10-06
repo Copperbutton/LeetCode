@@ -13,28 +13,25 @@
 
 public class DecodeWays {
     public int numDecodings(String s) {
-        int length = s.length();
-        if (length == 0)
+        if (s == null || s.length() == 0)
             return 0;
-
-        int[] numDecode = new int[length + 1];
-        numDecode[length] = 1;
-        numDecode[length - 1] = decodeAble(s.substring(length - 1, length)) ? 1 : 0;
-        for (int i = length - 2; i >= 0; i--) {
-            if (!decodeAble(s.substring(i, i + 1)))
-                numDecode[i] = 0;
-            else
-                numDecode[i] = decodeAble(s.substring(i, i + 2)) ? (numDecode[i + 1] + numDecode[i + 2]) : numDecode[i + 1];
+        int len = s.length();
+        int decode[] = new int[len + 1];
+        decode[len] = 1;
+        decode[len - 1] = isDecodable(s.substring(len - 1, len)) ? 1 : 0;
+        for (int i = len - 2; i>= 0; i--) {
+            decode[i] += isDecodable(s.substring(i, i+1)) ? decode[i + 1] : 0;
+            decode[i] += isDecodable(s.substring(i, i + 2)) ? decode[i + 2] : 0;
         }
-        return numDecode[0];
+        return decode[0];
     }
-
-    private boolean decodeAble(String code) {
-        if (code.length() == 1 && Integer.parseInt(code) > 0)
-            return true;
-        if (code.length() == 2 && code.charAt(0) != '0'
-                && Integer.parseInt(code) <= 26)
-            return true;
-        return false;
+    
+    private boolean isDecodable(String p){
+        if (p.length() == 1)
+            return p.charAt(0) >= '1' && p.charAt(0) <= '9';
+        else {
+            int value = Integer.parseInt(p);
+            return p.charAt(0) != '0' &&  value >= 1 && value <= 26; 
+        }
     }
 }
