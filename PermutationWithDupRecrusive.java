@@ -7,45 +7,32 @@
  **/
 public class PermutationWithDupRecrusive {
     public List<List<Integer>> permuteUnique(int[] num) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        Map<Integer, Integer> numExpected = new HashMap<Integer, Integer>();
-        Map<Integer, Integer> numUsed = new HashMap<Integer, Integer>();
-        
-        for (int n : num) {
-            int count = 1;
-            if (numExpected.containsKey(n))
-                count = numExpected.get(n) + 1;
-            else
-                numUsed.put(n, 0);
-            numExpected.put(n, count);
-        }
-        
-        Set<Integer> keySet = numExpected.keySet();
-        Integer[] distinctNums = keySet.toArray(new Integer[keySet.size()]);
-        Arrays.sort(distinctNums);
-        findPermuteunique(distinctNums, num.length, result, numExpected,
-                          numUsed, new ArrayList<Integer>());
+        List<List<Integer>> result = new ArrayList<List<Integer>> ();
+        if (num == null)
+            return result;
+        int len = num.length;
+        boolean[] used = new boolean[len];
+        Arrays.sort(num);
+        findPermutations(num, used, new LinkedList<Integer> (), result);
         return result;
     }
     
-    private void findPermuteunique(Integer[] distinctNums, int leftNumCount,
-                                   List<List<Integer>> result, Map<Integer, Integer> numExpected,
-                                   Map<Integer, Integer> numUsed, List<Integer> path) {
-        if (leftNumCount == 0) {
-            result.add(new ArrayList<Integer>(path));
+    private void findPermutations(int[] num, boolean[] used, LinkedList<Integer> path, List<List<Integer>> result) {
+        if (path.size() == num.length) {
+            result.add(new ArrayList<Integer> (path));
             return;
         }
         
-        for (Integer num : distinctNums) {
-            int numUsedCount = numUsed.get(num);
-            if (numUsedCount == numExpected.get(num))
+        for (int index = 0; index < num.length; index++) {
+            if (used[index])
                 continue;
-            path.add(num);
-            numUsed.put(num, numUsedCount + 1);
-            findPermuteunique(distinctNums, leftNumCount - 1, result,
-                              numExpected, numUsed, path);
-            path.remove(path.size() - 1);
-            numUsed.put(num, numUsedCount);
+            path.add(num[index]);
+            used[index] = true;
+            findPermutations(num, used, path, result);
+            used[index] = false;
+            path.removeLast();
+            while (index < num.length - 1 && num[index] == num[index + 1])
+                index++;
         }
     }
 }
