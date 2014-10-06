@@ -11,48 +11,48 @@
  */
 
 public class Solution {
+public class Solution {
     public List<String> wordBreak(String s, Set<String> dict) {
+        List<String> result = new ArrayList<String>();
         int len = s.length();
-        boolean[] stringBreak = new boolean[len + 1];
-        boolean[][] breakable = new boolean[len][len + 1];
-        stringBreak[len] = true;
-
-        for (int left = len - 1; left >= 0; left--) {
-            for (int right = left + 1; right <= len; right++) {
-                if (stringBreak[right]
-                        && dict.contains(s.substring(left, right))) {
-                    stringBreak[left] = true;
-                    breakable[left][right] = true;
-                    ;
+        boolean breakable[] = new boolean[len + 1];
+        breakable[len] = true;
+        boolean breakRecord[][] = new boolean[len][len];
+        for (int i = len - 1; i >= 0; i--) {
+            for (int j = i; j < len; j++) {
+                String substring = s.substring(i, j+ 1);
+                if(dict.contains(substring) && breakable[j + 1]) {
+                    breakable[i] = true;
+                    breakRecord[i][j] = true;
                 }
             }
         }
-        List<String> result = new ArrayList<String>();
-        breakWord(s, breakable, result, new LinkedList<String>(), 0);
+        breakWord(s, breakRecord, new LinkedList<String> (), result, 0);
         return result;
     }
-
-    private void breakWord(String s, boolean[][] breakable,
-            List<String> result, LinkedList<String> path, int index) {
-        if (index == s.length()) {
+    
+    private void breakWord(String s, boolean[][] breakRecord, LinkedList<String> path, List<String> result, int start) {
+        if (start == s.length()) {
             StringBuilder builder = new StringBuilder();
             if (path.size() > 0) {
                 for (String p : path) {
                     builder.append(p);
-                    builder.append(' ');
+                    builder.append(" ");
                 }
                 builder.setLength(builder.length() - 1);
             }
             result.add(builder.toString());
             return;
         }
-
-        for (int start = index + 1; start <= s.length(); start++) {
-            if (breakable[index][start]) {
-                path.add(s.substring(index, start));
-                breakWord(s, breakable, result, path, start);
+        
+        for (int index = start; index < s.length(); index++) {
+            if (breakRecord[start][index]) {
+                path.addLast(s.substring(start, index + 1));
+                breakWord(s, breakRecord, path, result, index + 1);
                 path.removeLast();
             }
         }
     }
+    
+}
 }
