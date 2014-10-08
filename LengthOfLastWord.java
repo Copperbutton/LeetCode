@@ -12,16 +12,12 @@
 
 public class LengthOfLastWord {
     public int lengthOfLastWord(String s) {
-        char[] chs = s.toCharArray();
-        int length = 0, index = chs.length - 1;
-        while (index >= 0 && chs[index] == ' ')
-            index--;
-
-        while (index >= 0 && chs[index] != ' ') {
-            index--;
-            length++;
-        }
-
-        return length;
+        int end = s.length() - 1;
+        while (end >= 0 && s.charAt(end) == ' ')
+            end --;
+        int start = end;
+        while (start >= 0 && s.charAt(start) != ' ')
+            start--;
+        return end - start;
     }
 }
