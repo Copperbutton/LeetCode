@@ -15,30 +15,36 @@
 
 public class CopyListWithRandomPointer {
     public RandomListNode copyRandomList(RandomListNode head) {
-        RandomListNode p1 = head;
-        while (p1 != null) {
-            RandomListNode newNode = new RandomListNode(p1.label);
-            newNode.next = p1.next;
-            p1.next = newNode;
-            p1 = newNode.next;
+        if (head == null)
+            return head;
+        
+        RandomListNode curr = head;
+        while (curr != null) {
+            RandomListNode newNode = new RandomListNode(curr.label);
+            newNode.next = curr.next;
+            curr.next = newNode;
+            curr = newNode.next;
         }
-
-        p1 = head;
-        while (p1 != null) {
-            RandomListNode next = p1.next;
-            next.random = (p1.random == null) ? null : p1.random.next;
-            p1 = next.next;
+        
+        curr = head;
+        RandomListNode next = head.next;
+        while (curr != null) {
+            next.random = curr.random == null ? null : curr.random.next;
+            curr = next.next;
+            next = curr == null ? null : curr.next;
         }
-
-        p1 = head;
-        RandomListNode head2 = (head == null) ? null : head.next, p2 = head2;
-        while (p1 != null) {
-            p1.next = p2.next;
-            p1 = p1.next;
-            p2.next = p1 == null ? null : p1.next;
-            p2 = p1 == null ? null : p2.next;
+        
+        RandomListNode dummy = new RandomListNode(-1);
+        dummy.next = head.next;
+        curr = head;
+        next = head.next;
+        while (curr != null) {
+            curr.next = next.next;
+            curr = curr.next;
+            next.next = curr == null ? null : curr.next;
+            next = next.next;
         }
-
-        return head2;
+        
+        return dummy.next;
     }
 }
