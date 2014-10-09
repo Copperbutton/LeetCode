@@ -29,29 +29,25 @@
 
 public class BinaryTreeLevelOrderTraversal {
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> levels = new ArrayList<List<Integer>>();
-        Queue<TreeNode> nodeQueue = new LinkedList<TreeNode>();
-        Queue<Integer> levelQueue = new LinkedList<Integer>();
-        nodeQueue.offer(root);
-        levelQueue.offer(0);
-        while (root != null && !nodeQueue.isEmpty()) {
-            TreeNode currNode = nodeQueue.poll();
-            int currLevel = levelQueue.poll();
-            if (levels.size() <= currLevel) {
-                List<Integer> newLevel = new ArrayList<Integer>();
-                levels.add(newLevel);
-            }
-            levels.get(currLevel).add(currNode.val);
-
-            if (currNode.left != null) {
-                nodeQueue.offer(currNode.left);
-                levelQueue.offer(currLevel + 1);
-            }
-
-            if (currNode.right != null) {
-                nodeQueue.offer(currNode.right);
-                levelQueue.offer(currLevel + 1);
-            }
+        List<List<Integer>> levels = new ArrayList<List<Integer>> ();
+        Queue<TreeNode> nodes = new LinkedList<TreeNode> ();
+        Queue<Integer> depth = new LinkedList<Integer> ();
+        nodes.offer(root);
+        depth.offer(0);
+        while (!nodes.isEmpty()) {
+            TreeNode currNode = nodes.poll();
+            int currDepth = depth.poll();
+            if (currNode == null)
+                continue;
+            
+            if (levels.size() <= currDepth)
+                levels.add(new ArrayList<Integer> ());
+            levels.get(currDepth).add(currNode.val);
+            
+            nodes.offer(currNode.left);
+            depth.offer(currDepth + 1);
+            nodes.offer(currNode.right);
+            depth.offer(currDepth + 1);
         }
         return levels;
     }
