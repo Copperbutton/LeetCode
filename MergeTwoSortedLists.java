@@ -17,21 +17,17 @@ public class MergeTwoSortedLists {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(-1);
         dummy.next = l1;
-        ListNode prev = dummy, p1 = l1, p2 = l2;
-        while (p1 != null && p2 != null) {
-            if (p1.val > p2.val) {
-                prev.next = p2;
-                p2 = p2.next;
-                prev.next.next = p1;
-                prev = prev.next;
-            } else {
-                prev = prev.next;
-                p1 = p1.next;
-            }
+        ListNode preInsert = dummy;
+        ListNode curr = l2;
+        while (curr != null) {
+            while (preInsert.next != null && preInsert.next.val < curr.val)
+                preInsert = preInsert.next;
+            l2 = curr.next;
+            curr.next = preInsert.next;
+            preInsert.next = curr;
+            preInsert = curr;
+            curr = l2;
         }
-        
-        if (p2 != null)
-            prev.next = p2;
         return dummy.next;
     }
 }
