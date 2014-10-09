@@ -12,26 +12,21 @@
  */
 public class ValidPalindrome {
     public boolean isPalindrome(String s) {
-        if (s == null)
-            return false;
+        if (s == null || s.length() < 2)
+            return true;
         s = s.toLowerCase();
-        char[] chs = s.toCharArray();
-        boolean isValidPalindrome = true;
-        for (int left = 0, right = chs.length - 1; left <= right;) {
-            char leftCh = chs[left];
-            char rightCh = chs[right];
-            if (!((leftCh >= 'a' && leftCh <= 'z') || (leftCh >= '0' && leftCh <= '9')))
-                left++;
-            else if (!((rightCh >= 'a' && rightCh <= 'z') || (rightCh >= '0' && rightCh <= '9')))
-                right--;
-            else if (leftCh != rightCh) {
-                isValidPalindrome = false;
-                break;
-            } else {
-                left++;
-                right--;
-            }
+        for (int begin = 0, end = s.length() - 1; begin < end; begin++, end--) {
+            while (begin < end && !isAlphanumeric(s.charAt(begin)))
+                begin++;
+            while (end > begin && !isAlphanumeric(s.charAt(end)))
+                end--;
+            if (begin > end || s.charAt(begin) != s.charAt(end))
+                return false;
         }
-        return isValidPalindrome;
+        return true;
+    }
+    
+    private boolean isAlphanumeric(char ch) {
+        return (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
     }
 }
