@@ -9,28 +9,27 @@
  * must sell the stock before you buy again).
  */
 public class BestTimeToBuyAndSellStockIIIDPI {
-    public int maxProfit(int[] prices) {
-        int length = prices.length;
-        if (length < 2)
+        public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2)
             return 0;
-            
-        int[] leftPartMaxProfit = new int[length];
-        int[] rightPartMaxProfit = new int[length];
         
-        for (int i = 1, minPrice = prices[0]; i < length; i ++) {
+        int len = prices.length;
+        int minPrice = prices[0];
+        int maxProfitFromLeft[] = new int[len];
+        for (int i = 1; i < len; i++) {
+            maxProfitFromLeft[i] = Math.max(maxProfitFromLeft[i - 1], prices[i] - minPrice);
             minPrice = Math.min(minPrice, prices[i]);
-            leftPartMaxProfit[i] = Math.max(leftPartMaxProfit[i - 1], prices[i] - minPrice);
         }
         
-        for (int i = length - 2, maxPrice = prices[length - 1]; i >= 0; i --) {
-            maxPrice = Math.max(maxPrice, prices[i]);
-            rightPartMaxProfit[i] = Math.max(rightPartMaxProfit[i + 1], maxPrice - prices[i]);
-        }
-        
+        int maxPrice = prices[len - 1];
         int maxProfit = 0;
-        for (int i = 0; i < prices.length; i ++) {
-            maxProfit = Math.max(maxProfit, leftPartMaxProfit[i] + rightPartMaxProfit[i]);
+        int maxProfitFromRight = 0;
+        for (int i = len - 2; i >= 0; i--) {
+            maxProfitFromRight = Math.max(maxProfitFromRight, maxPrice - prices[i]);
+            maxProfit = Math.max(maxProfit, maxProfitFromRight + maxProfitFromLeft[i]);
+            maxPrice = Math.max(prices[i], maxPrice);
         }
+        
         return maxProfit;
     }
 }
