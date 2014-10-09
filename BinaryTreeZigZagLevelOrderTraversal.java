@@ -28,33 +28,27 @@
 public class BinaryTreeZigZagLevelOrderTraversal {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> levels = new ArrayList<List<Integer>> ();
-        Queue<TreeNode> nodeQueue = new LinkedList<TreeNode> ();
-        Queue<Integer> levelQueue = new LinkedList<Integer> ();
-        
-        nodeQueue.offer(root);
-        levelQueue.offer(0);
-        while (root != null && !nodeQueue.isEmpty()) {
-            TreeNode currNode = nodeQueue.poll();
-            int currLevel = levelQueue.poll();
-            if (levels.size() <= currLevel) {
-                List<Integer> newLevel = new ArrayList<Integer> ();
-                levels.add(newLevel);
-            }
-            if (0 != currLevel % 2)
-                levels.get(currLevel).add(0, currNode.val);
+        Queue<TreeNode> nodes = new LinkedList<TreeNode> ();
+        Queue<Integer> depths = new LinkedList<Integer> ();
+        nodes.offer(root);
+        depths.offer(0);
+        while (!nodes.isEmpty()) {
+            TreeNode currNode = nodes.poll();
+            int currDepth = depths.poll();
+            if (currNode == null)
+                continue;
+            
+            if (levels.size() <= currDepth)
+                levels.add(new LinkedList<Integer> ());
+            if (0 == currDepth % 2)
+                levels.get(currDepth).add(currNode.val);
             else
-                levels.get(currLevel).add(currNode.val);
+                levels.get(currDepth).add(0, currNode.val);
             
-            if (currNode.left != null) {
-                nodeQueue.offer(currNode.left);
-                levelQueue.offer(currLevel + 1);
-            }
-            
-            if (currNode.right != null) {
-                nodeQueue.offer(currNode.right);
-                levelQueue.offer(currLevel + 1);
-            }
+            nodes.offer(currNode.left);
+            depths.offer(currDepth + 1);
+            nodes.offer(currNode.right);
+            depths.offer(currDepth + 1);
         }
-        return levels;
-    }
+        return levels;    }
 }
