@@ -5,25 +5,21 @@
  */
 
 public class Anagrams {
-    public List<String> anagrams(String[] strs) {
-        List<String> result = new ArrayList<String>();
-        Map<String, List<String>> found = new HashMap<String, List<String>>();
+            Map<String, List<String>> map = new HashMap<String, List<String>> ();
         for (String str : strs) {
             char[] chs = str.toCharArray();
             Arrays.sort(chs);
             String newStr = new String(chs);
-            if (found.containsKey(newStr)) {
-                found.get(newStr).add(str);
-            } else {
-                List<String> newList = new ArrayList<String>();
-                newList.add(str);
-                found.put(newStr, newList);
+            if (!map.containsKey(newStr)) {
+                map.put(newStr, new ArrayList<String> ());
             }
+            map.get(newStr).add(str);
         }
-
-        for (String str : found.keySet()) {
-            List<String> list = found.get(str);
-            if (list.size() > 1)
+        
+        List<String> result = new ArrayList<String>();
+        for (String str : map.keySet()) {
+            List<String> list = map.get(str);
+            if (list.size()  > 1)
                 result.addAll(list);
         }
         return result;
