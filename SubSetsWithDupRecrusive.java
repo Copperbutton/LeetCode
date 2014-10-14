@@ -11,40 +11,32 @@
 
 public class SubSetsWithDupRecrusive {
     public List<List<Integer>> subsetsWithDup(int[] num) {
-        Map<Integer, Integer> appearCount = new HashMap<Integer, Integer>();
-        for (int n : num) {
-            int count = 1;
-            if (appearCount.containsKey(n))
-                count = appearCount.get(n) + 1;
-            appearCount.put(n, count);
-        }
-        Set<Integer> keySet = appearCount.keySet();
-        Integer[] distinctNums = keySet.toArray(new Integer[keySet.size()]);
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        Arrays.sort(distinctNums); // For online juege purpose only
-        findSubsetsWithDup(distinctNums, 0, new ArrayList<Integer>(), result,
-                           appearCount);
-        return result;
+        Arrays.sort(num);
+        Set<List<Integer>> result = new HashSet<List<Integer>> ();
+        findSubset(num, 0, new LinkedList<Integer> (), result);
+        List<List<Integer>> ret = new ArrayList(result);
+        return ret;
     }
     
-    private void findSubsetsWithDup(Integer[] distinctNums, int depth,
-                                    List<Integer> path, List<List<Integer>> result,
-                                    Map<Integer, Integer> appearCount) {
-        if (depth == distinctNums.length) {
-            result.add(new ArrayList<Integer>(path));
+    private void findSubset(int[] num, int start, LinkedList<Integer> path, Set<List<Integer>> result) {
+        if (start == num.length) {
+            List<Integer> newPath = new ArrayList<Integer> (path);
+            if (!result.contains(newPath))
+                result.add(newPath);
             return;
         }
         
-        int nextNum = distinctNums[depth];
-        int appear = appearCount.get(nextNum);
-        for (int i = 0; i <= appear; i++) {
-            findSubsetsWithDup(distinctNums, depth + 1, path, result,
-                               appearCount);
-            path.add(nextNum);
+        int prev = -1;
+        for (int index = start; index < num.length; index++) {
+            if (index == start || prev != num[index]) {
+                prev = num[index];
+            } else
+                continue;
+                
+            findSubset(num, index + 1, path, result);
+            path.add(num[index]);
+            findSubset(num, index + 1, path, result);
+            path.removeLast();
         }
-        
-        for (int i = 0; i <= appear; i++) {
-            path.remove(path.size() - 1);
-        }
-    }
+     }
 }
