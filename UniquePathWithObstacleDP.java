@@ -15,19 +15,17 @@
  */
 public class UniquePathWithObstacleDP {
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-        int ROW_NUM = obstacleGrid.length;
-        if (ROW_NUM == 0)
+        int ROW = obstacleGrid.length;
+        if (ROW == 0)
             return 0;
-        int COL_NUM = obstacleGrid[0].length;
-        if (COL_NUM == 0)
-            return 0;
-
-        int[] path = new int[COL_NUM];
-        path[COL_NUM - 1] = obstacleGrid[ROW_NUM - 1][COL_NUM - 1] == 0 ? 1 : 0;
-        for (int i = ROW_NUM - 1; i >= 0; i--)
-            for (int j = COL_NUM - 1; j >= 0; j--)
-                path[j] = obstacleGrid[i][j] == 1 ? 0 : (j == COL_NUM - 1 ? 0 : path[j + 1]) + path[j];
-
+        int COL = obstacleGrid[0].length;
+        int[] path = new int[COL + 1];
+        path[COL - 1] = obstacleGrid[ROW - 1][COL - 1] == 1 ? 0 : 1;
+        for (int row = ROW - 1; row >= 0; row--) {
+            for (int col = COL - 1; col >= 0; col --) {
+                path[col] = obstacleGrid[row][col] == 1 ? 0 : path[col] + path[col + 1];
+            }
+        }
         return path[0];
     }
 }
