@@ -11,27 +11,24 @@
  */
 
 public class SimplifyPath {
-    public String simplifyPath(String path) {
+        public String simplifyPath(String path) {
         String[] tokens = path.split("/");
-        LinkedList<String> list = new LinkedList<String>();
+        Stack<String> stack = new Stack<String> ();
         for (String str : tokens) {
-            if (str.length() == 0 || str.equals("."))
+            if (str.equals(".") || str.equals(""))
                 continue;
-            else if (str.equals("..")) {
-                if (list.size() > 0)
-                    list.removeLast();
+            if (str.equals("..")) {
+                if (!stack.isEmpty())
+                    stack.pop();
             } else
-                list.add(str);
+                stack.push(str);
         }
-
         StringBuilder builder = new StringBuilder();
-        builder.append('/');
-        for (String str : list) {
-            builder.append(str);
-            builder.append('/');
+        Iterator<String> iterator = stack.iterator();
+        while (iterator.hasNext()) {
+            builder.append("/");
+            builder.append(iterator.next());
         }
-        if (builder.length() > 1)
-            builder.setLength(builder.length() - 1);
-        return builder.toString();
+        return builder.length() == 0 ? "/" : builder.toString();
     }
 }
