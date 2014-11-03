@@ -12,68 +12,70 @@
  **/
 
 public class WordLadderFindPath {
-    public List<List<String>> findLadders(String start, String end,
-                                          Set<String> dict) {
-        Set<String> unvisited = new HashSet<String>(dict);
-        Set<String> ladder = new HashSet<String>();
-        Map<String, Queue<String>> precursors = new HashMap<String, Queue<String>>();
-        
-        for (String str : unvisited)
-            precursors.put(str, new LinkedList<String>());
-        
-        ladder.add(start);
-        unvisited.remove(start);
-        while (!ladder.isEmpty()) {
-            Set<String> nextLevelLadder = new HashSet<String>();
-            for (String currLadder : ladder) {
-                for (String nextLadder : getNextLadders(unvisited, currLadder)) {
-                    nextLevelLadder.add(nextLadder);
-                    precursors.get(nextLadder).offer(currLadder);
+  public List<List<String>> findLadders(String start, String end,
+            Set<String> dict) {
+        Set<String> used = new HashSet<String>();
+        Map<String, List<String>> precedsWords = new HashMap<String, List<String>>();
+        Set<String> currLevel = new HashSet<String>();
+        Set<String> nextLevel = new HashSet<String>();
+        currLevel.add(start);
+        while (!currLevel.isEmpty() && !currLevel.contains(end)) {
+            used.addAll(currLevel);
+            for (String word : currLevel) {
+                List<String> permutes = getPermutates(dict, used, word);
+                nextLevel.addAll(permutes);
+                for (String permute : permutes) {
+                    if (!precedsWords.containsKey(permute))
+                        precedsWords.put(permute, new ArrayList<String>());
+                    precedsWords.get(permute).add(word);
                 }
             }
-            if (nextLevelLadder.contains(end))
-                break;
-            unvisited.removeAll(nextLevelLadder);
-            ladder = nextLevelLadder;
+            currLevel = nextLevel;
+            nextLevel = new HashSet<String>();
         }
-        
-        List<List<String>> result = new LinkedList<List<String>>();
+
+        List<List<String>> ladders = new ArrayList<List<String>>();
         LinkedList<String> path = new LinkedList<String>();
         path.add(end);
-        genWordLadder(result, path, start, end, precursors);
-        return result;
-        
+        searchLadder(end, start, precedsWords, path, ladders);
+        return ladders;
     }
-    
-    private List<String> getNextLadders(Set<String> unvisited, String currLadder) {
-        List<String> nextLadders = new ArrayList<String>();
-        StringBuffer ladder = new StringBuffer(currLadder);
-        for (int i = 0; i < currLadder.length(); i++) {
-            char old = ladder.charAt(i);
-            for (char ch = 'a'; ch < 'z'; ch++) {
-                ladder.setCharAt(i, ch);
-                String newWord = ladder.toString();
-                if (unvisited.contains(newWord)) {
-                    nextLadders.add(newWord);
-                }
+
+    private List<String> getPermutates(Set<String> dict, Set<String> used,
+            String word) {
+        List<String> permutes = new ArrayList<String>();
+        StringBuffer buffer = new StringBuffer(word);
+        for (int i = 0; i < word.length(); i++) {
+            char old = word.charAt(i);
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                if (ch == old)
+                    continue;
+                buffer.setCharAt(i, ch);
+                String newWord = buffer.toString();
+                if (!dict.contains(newWord) || used.contains(newWord))
+                    continue;
+                permutes.add(newWord);
             }
-            ladder.setCharAt(i, old);
+            buffer.setCharAt(i, old);
         }
-        return nextLadders;
+        return permutes;
     }
-    
-    private void genWordLadder(List<List<String>> result,
-                               LinkedList<String> path, String start, String end,
-                               Map<String, Queue<String>> precursors) {
-        if (start == end) {
-            result.add(new LinkedList<String>(path));
+
+    private void searchLadder(String start, String end,
+            Map<String, List<String>> precedsWords, LinkedList<String> path,
+            List<List<String>> ladders) {
+        if (start.equals(end)) {
+            ladders.add(new ArrayList<String>(path));
             return;
         }
-        
-        Queue<String> precurQueue = precursors.get(end);
-        for (String wordPrecurs : precurQueue) {
-            path.addFirst(wordPrecurs);
-            genWordLadder(result, path, start, wordPrecurs, precursors);
+
+        if (!precedsWords.containsKey(start))
+            return;
+
+        List<String> preceds = precedsWords.get(start);
+        for (String word : preceds) {
+            path.addFirst(word);
+            searchLadder(word, end, precedsWords, path, ladders);
             path.removeFirst();
         }
     }
