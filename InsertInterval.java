@@ -17,21 +17,23 @@
  * e; } }
  */
 public class InsertInterval {
-        public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-        int pos = 0;
-        while (pos < intervals.size()) {
-            Interval currInterval = intervals.get(pos);
-            if (newInterval.start > currInterval.end) {
-                pos ++;
-            } else if (newInterval.end < currInterval.start) {
-                break;
+    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        List<Interval> inserted = new ArrayList<Interval> ();
+        boolean insert = false;
+        for (Interval interval : intervals) {
+            if (interval.end < newInterval.start || insert) {
+                inserted.add(interval);
+            } else if (interval.start > newInterval.end) {
+                inserted.add(newInterval);
+                inserted.add(interval);
+                insert = true;
             } else {
-                newInterval.start = Math.min(currInterval.start, newInterval.start);
-                newInterval.end = Math.max(currInterval.end, newInterval.end);
-                intervals.remove(pos);
+                newInterval.start = Math.min(newInterval.start, interval.start);
+                newInterval.end = Math.max(newInterval.end, interval.end);
             }
         }
-        intervals.add(pos, newInterval);
-        return intervals;
+        if (!insert)
+            inserted.add(newInterval);
+        return inserted;
     }
 }
