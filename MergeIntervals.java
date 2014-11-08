@@ -7,28 +7,29 @@
  * e; } }
  */
 public class MergeIntervals {
-    public List<Interval> merge(List<Interval> intervals) {
-        List<Interval> list = new LinkedList<Interval>();
-        for (Interval interval : intervals)
-            insertIntoList(list, interval);
-        return list;
+    private class IntervalComparator implements Comparator<Interval> {
+        @Override
+        public int compare(Interval interval0, Interval interval1) {
+            return interval0.start - interval1.start;
+        }
     }
-
-    private void insertIntoList(List<Interval> intervals, Interval newInterval) {
-        int pos = 0;
-        while (pos < intervals.size()) {
-            Interval currInterval = intervals.get(pos);
-            if (newInterval.end < currInterval.start)
-                break;
-            else if (newInterval.start > currInterval.end)
-                pos++;
-            else {
-                newInterval.end = Math.max(currInterval.end, newInterval.end);
-                newInterval.start = Math.min(currInterval.start,
-                        newInterval.start);
-                intervals.remove(pos);
+    
+    public List<Interval> merge(List<Interval> intervals) {
+        List<Interval> merged = new ArrayList<Interval> ();
+        if (intervals == null || intervals.size() == 0)
+            return merged;
+        Collections.sort(intervals, new IntervalComparator());
+        Interval prev = intervals.get(0);
+        for (Interval curr : intervals) {
+            if (prev.end < curr.start) {
+                merged.add(prev);
+                prev = curr;
+            } else {
+                prev.start = Math.min(curr.start, prev.start);
+                prev.end = Math.max(curr.end, prev.end);
             }
         }
-        intervals.add(pos, newInterval);
+        merged.add(prev);
+        return merged;
     }
 }
