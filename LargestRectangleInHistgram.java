@@ -14,27 +14,27 @@
  */
 
 public class LargestRectangleInHistgram {
-    public int largestRectangleArea(int[] height) {
-        int maxRectArea = 0;
-        Stack<Integer> stack = new Stack<Integer>();
-        for (int i = 0; i < height.length;) {
-            if (stack.isEmpty() || height[stack.peek()] <= height[i])
-                stack.push(i++);
-            else {
-                int topIndex = stack.pop();
-                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
-                int currArea = width * height[topIndex];
-                maxRectArea = Math.max(currArea, maxRectArea);
+     public int largestRectangleArea(int[] height) {
+        if (height == null)
+            return 0;
+        
+        int maxArea = 0;
+        Stack<Integer> indexStack = new Stack<Integer> ();
+        for (int i = 0; i < height.length; i++) {
+            while (!indexStack.isEmpty() && height[i] < height[indexStack.peek()]) {
+                int top = height[indexStack.pop()];
+                int width = indexStack.isEmpty() ? i : i - indexStack.peek() - 1;
+                maxArea = Math.max(maxArea, top * width);
             }
+            indexStack.push(i);
         }
-
-        while (!stack.isEmpty()) {
-            int topIndex = stack.pop();
-            int width = stack.isEmpty() ? height.length : height.length
-                    - stack.peek() - 1;
-            int currArea = width * height[topIndex];
-            maxRectArea = Math.max(currArea, maxRectArea);
+        
+        while (!indexStack.isEmpty()) {
+            int top = height[indexStack.pop()];
+            int width = indexStack.isEmpty() ? height.length : height.length - indexStack.peek() - 1;
+            maxArea = Math.max(maxArea, top * width);
         }
-        return maxRectArea;
+        
+        return maxArea;
     }
 }
