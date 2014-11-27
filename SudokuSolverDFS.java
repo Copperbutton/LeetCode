@@ -10,38 +10,37 @@
  */
 
 public class SudokuSolverDFS {
-    private final static int LENGTH = 9;
-
+    private static final int N = 9;
     public void solveSudoku(char[][] board) {
-        findValidSudoku(board);
-        return;
+        searchSudokuSolu(board, 0);
     }
-
-    private boolean findValidSudoku(char[][] board) {
-        for (int row = 0; row < LENGTH; row++) {
-            for (int col = 0; col < LENGTH; col++) {
-                if (board[row][col] == '.') {
-                    for (char ch = '1'; ch <= '9'; ch++) {
-                        board[row][col] = ch;
-                        if (isValidSudoku(board, row, col)
-                                && findValidSudoku(board))
-                            return true;
-                    }
-                    board[row][col] = '.';
-                    return false;
-                }
-            }
+    
+    private boolean searchSudokuSolu(char[][] board, int loca) {
+        if (loca == N * N)
+            return true;
+            
+        int row = loca / N;
+        int col = loca % N;
+        
+        if (board[row][col] != '.')
+            return searchSudokuSolu(board, loca + 1);
+            
+        for (char ch = '1'; ch <= '9'; ch++) {
+            board[row][col] = ch;
+            if (isValidSudoku(board, row, col) && searchSudokuSolu(board, loca + 1))
+                return true;
+            board[row][col] = '.';
         }
-        return true;
+        return false;
     }
-
+    
     private boolean isValidSudoku(char[][] board, int row, int col) {
-        for (int i = 0; i < LENGTH; i++) {
+        for (int i = 0; i < N; i++) {
             if (i != col && board[row][i] == board[row][col])
                 return false;
         }
 
-        for (int i = 0; i < LENGTH; i++) {
+        for (int i = 0; i < N; i++) {
             if (i != row && board[row][col] == board[i][col])
                 return false;
         }
