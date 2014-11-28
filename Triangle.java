@@ -10,17 +10,19 @@
  */
 public class Triangle {
     public int minimumTotal(List<List<Integer>> triangle) {
-        int rowNum = triangle.size();
-        int[] minPathTotal = new int[rowNum + 1];
-        for (int i = rowNum - 1; i >= 0; i--) {
-            List<Integer> row = triangle.get(i);
-            for (int j = 0; j < row.size(); j++) {
-                int fillIndex = rowNum - j;
-                minPathTotal[fillIndex] = row.get(row.size() - 1 - j)
-                        + Math.min(minPathTotal[fillIndex - 1],
-                                minPathTotal[fillIndex]);
+        if (triangle == null || triangle.size() == 0)
+            return -1;
+        int len = triangle.size();
+        int[] minPath = new int[len + 1];
+        ArrayList<List<Integer>> copy = new ArrayList<List<Integer>> (triangle);
+        for (int i = len - 1; i >= 0; i--) {
+            List<Integer> row = copy.get(i);
+            int index = 0;
+            for (int val : row) {
+                minPath[index] = Math.min(minPath[index], minPath[index + 1]) + val;
+                index ++;
             }
         }
-        return minPathTotal[rowNum];
+        return minPath[0];
     }
 }
