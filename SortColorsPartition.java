@@ -20,23 +20,23 @@
 
 public class SortColorsPartition {
     public void sortColors(int[] A) {
+        partition(A, 0);
         partition(A, 1);
-        partition(A, 2);
     }
-
-    private void partition(int[] A, int bar) {
-        int lower = 0, upper = A.length - 1;
-        while (lower <= upper) {
-            while (upper >= lower && A[upper] >= bar)
-                upper--;
-            while (lower <= upper && A[lower] < bar)
-                lower++;
-            if (lower < upper) {
-                int swap = A[lower];
-                A[lower++] = A[upper];
-                A[upper--] = swap;
-            } else
-                lower++;
+    
+    private void partition(int[] A, int pivot) {
+        int left = 0;
+        while (left < A.length && A[left] <= pivot)
+            left ++;
+        int right = left + 1;
+        while (right < A.length) {
+            if (A[right] > pivot)
+                right ++;
+            else {
+                int tmp = A[right];
+                A[right ++] = A[left];
+                A[left ++] = tmp;
+            }
         }
     }
 }
