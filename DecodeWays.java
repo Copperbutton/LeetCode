@@ -16,22 +16,18 @@ public class DecodeWays {
         if (s == null || s.length() == 0)
             return 0;
         int len = s.length();
-        int decode[] = new int[len + 1];
-        decode[len] = 1;
-        decode[len - 1] = isDecodable(s.substring(len - 1, len)) ? 1 : 0;
-        for (int i = len - 2; i>= 0; i--) {
-            decode[i] += isDecodable(s.substring(i, i+1)) ? decode[i + 1] : 0;
-            decode[i] += isDecodable(s.substring(i, i + 2)) ? decode[i + 2] : 0;
+        int[] decodes = new int[len + 1];
+        decodes[len] = 1;
+        for (int i = len - 1; i >= 0; i--) {
+            int num1 = s.charAt(i) - '0';
+            decodes[i] = (num1 == 0 ? 0 : decodes[i + 1]);
+            if (num1 == 0 || i == len - 1)
+                continue;
+            
+            int num2 = num1 * 10 + s.charAt(i + 1) - '0';
+            if (num2 > 0 && num2 <= 26)
+                decodes[i] += decodes[i + 2];
         }
-        return decode[0];
-    }
-    
-    private boolean isDecodable(String p){
-        if (p.length() == 1)
-            return p.charAt(0) >= '1' && p.charAt(0) <= '9';
-        else {
-            int value = Integer.parseInt(p);
-            return p.charAt(0) != '0' &&  value >= 1 && value <= 26; 
-        }
+        return decodes[0];
     }
 }
