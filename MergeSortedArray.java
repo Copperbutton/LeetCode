@@ -8,16 +8,11 @@
 
 public class Solution {
     public void merge(int A[], int m, int B[], int n) {
-        int indx1 = m -1;
-        int indx2 = n - 1;
-        int indx3 = m + n - 1;
-        while (indx3 >= 0) {
-            if (indx1 >= 0 && indx2 >= 0) {
-                A[indx3--] = A[indx1] > B[indx2] ? A[indx1--] : B[indx2--];
-            } else if (indx1 >= 0) {
-                A[indx3--] = A[indx1--];
-            } else if (indx2 >= 0) {
-                A[indx3--] = B[indx2--];
+        while (n > 0) {
+            if (m > 0 && A[m - 1] > B[n - 1]) {
+                    A[--m + n] = A[m];
+                } else {
+                    A[--n + m] = B[n];
             }
         }
     }
