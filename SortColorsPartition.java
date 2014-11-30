@@ -28,13 +28,10 @@ public class SortColorsPartition {
         int left = 0;
         while (left < A.length && A[left] <= pivot)
             left ++;
-        int right = left + 1;
-        while (right < A.length) {
-            if (A[right] > pivot)
-                right ++;
-            else {
+        for (int right = left + 1; right < A.length; right ++) {
+            if (A[right] <= pivot) {
                 int tmp = A[right];
-                A[right ++] = A[left];
+                A[right] = A[left];
                 A[left ++] = tmp;
             }
         }
