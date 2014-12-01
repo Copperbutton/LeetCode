@@ -6,10 +6,20 @@
 
 public class ReverseInteger {
     public int reverse(int x) {
-        int result = 0;
-        for (; x != 0; x /= 10) {
-            result = result * 10 + x % 10;
+        if (x == Integer.MIN_VALUE)
+            return 0;
+            
+        boolean negative = x < 0;
+        x = Math.abs(x);
+        int newX = 0;
+        while (x > 0) {
+            if (newX > Integer.MAX_VALUE/10 || (newX == Integer.MAX_VALUE && x%10 > 7))
+                return 0;
+            newX = newX * 10 + x%10;
+            x /= 10;
         }
-        return result;
+        if (negative)
+            newX = -newX;
+        return newX;
     }
-}a
+}
