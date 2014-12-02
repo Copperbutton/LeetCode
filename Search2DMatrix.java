@@ -13,20 +13,35 @@
 
 public class Search2DMatrix {
     public boolean searchMatrix(int[][] matrix, int target) {
-        boolean found = false;
-        int ROW = matrix.length, COL = ROW > 0 ? matrix[0].length : 0;
-        int start = 0, end = ROW * COL - 1;
-        while (start <= end) {
-            int mid = start + (end - start) / 2;
-            int val = matrix[mid / COL][mid % COL];
-            if (target == val) {
-                found = true;
-                break;
-            } else if (target < val) {
-                end = mid - 1;
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return false;
+        int R = matrix.length;
+        int C = matrix[0].length;
+        
+        int rowBegin = 0, rowEnd = R - 1;
+        while (rowBegin <= rowEnd) {
+            int mid = rowBegin + (rowEnd - rowBegin)/2;
+            int comp = matrix[mid][0] - target;
+            if (comp == 0)
+                return true;
+            else if (comp > 0) {
+                rowEnd = mid - 1;
             } else
-                start = mid + 1;
+                rowBegin = mid + 1;
         }
-        return found;
+        if (rowEnd < 0)
+            return false;
+        
+        for (int colBegin = 0, colEnd = C - 1; colBegin <= colEnd;) {
+            int mid = colBegin + (colEnd - colBegin)/2;
+            int comp = matrix[rowEnd][mid] - target;
+            if (comp == 0)
+                return true;
+            else if (comp > 0) {
+                colEnd = mid - 1;
+            } else
+                colBegin = mid + 1;
+        }
+        return false;
     }
 }
