@@ -28,11 +28,10 @@ public class SubSetsWithDupRecrusive {
         
         int prev = -1;
         for (int index = start; index < num.length; index++) {
-            if (index == start || prev != num[index]) {
-                prev = num[index];
-            } else
+            if (index != start && prev == num[index])
                 continue;
                 
+            prev = num[index];
             findSubset(num, index + 1, path, result);
             path.add(num[index]);
             findSubset(num, index + 1, path, result);
