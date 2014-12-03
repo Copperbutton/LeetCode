@@ -5,27 +5,23 @@
  */
 
 public class AddBinary {
-public String addBinary(String a, String b) {
+    public String addBinary(String a, String b) {
         if (a == null || b == null)
             return a == null ? b : a;
-        int aLen = a.length();
-        int bLen = b.length();
-        char[] ret = new char[Math.max(aLen, bLen) + 1];
-        int indexA = aLen - 1;
-        int indexB = bLen - 1;
-        int indexS = ret.length - 1;
-        int carry = 0;
-        while (indexA >= 0 || indexB >= 0 || indexS >= 0) {
-            int sum = carry;
-            if (indexA >= 0)
-                sum += (a.charAt(indexA--) - '0');
-            if (indexB >= 0)
-                sum += (b.charAt(indexB--) - '0');
-            ret[indexS--] = (char)('0' + sum % 2);
-            carry = sum/2;
+        char[] res = new char[Math.max(a.length(), b.length()) + 1];
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        int k = res.length - 1;
+        for(int sum = 0; k >= 0; sum /= 2) {
+            if (i >= 0)
+                sum += (a.charAt(i--) - '0');
+            if (j >= 0)
+                sum += (b.charAt(j--) - '0');
+            res[k --] = (char)(sum % 2 + '0');
         }
-        if (ret[0] == '0')
-            ret = Arrays.copyOfRange(ret, 1, ret.length);
-        return new String(ret);
+        
+        if (res[0] == '0')
+            res = Arrays.copyOfRange(res, 1, res.length);
+        return new String(res);
     }
 }
