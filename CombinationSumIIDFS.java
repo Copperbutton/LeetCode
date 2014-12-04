@@ -19,26 +19,18 @@ public class CombinationSumIIDFS {
         return result;
     }
 
-    private void findCombinationSum(int[] num, int target, int index,
-            LinkedList<Integer> path, List<List<Integer>> result) {
+    private void searchCombSum(int[] num, int target, int index, List<List<Integer>> result,  LinkedList<Integer> path) {
         if (target == 0) {
-            result.add(new LinkedList<Integer>(path));
+            result.add(new ArrayList<Integer> (path));
             return;
         }
-
-        int previous = -1;
-        for (int i = index; i < num.length; i++) {
-            int nextValue = num[i];
-            if (nextValue == previous)
-                continue;
-
-            if (nextValue <= target) {
-                path.add(nextValue);
-                previous = nextValue;
-                findCombinationSum(num, target - nextValue, i + 1, path, result);
-                path.removeLast();
-            } else
-                break;
+        
+        for (int i = index; i < num.length && num[i] <= target;)  {
+            path.add(num[i]);
+            searchCombSum(num, target - num[i], ++i, result, path);
+            path.removeLast();
+            while (i < num.length && num[i] == num[i - 1])
+                i ++;
         }
     }
 }
