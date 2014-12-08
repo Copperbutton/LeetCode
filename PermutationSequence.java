@@ -11,33 +11,28 @@
  */
 
 public class PermutationSequence {
-public class Solution {
     public String getPermutation(int n, int k) {
-        char[] array = new char[n];
-        for (int i = 0; i < n; i++)
-            array[i] = (char)(i + '1');
-        k--;
-        k %= getFactorial(n);
-        for (int i = 0; i < n; i++) {
-            int factoral = getFactorial(n - i - 1);
-            int index = k/factoral;
-            swap(array, i, i + index);
-            Arrays.sort(array, i + 1, n);
-            k %= factoral;
+        int[] factorial = new int[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i < n; i++) {
+            factorial[i] = i * factorial[i - 1];
         }
-        return new String(array);
-    }
-    
-    public int getFactorial(int n) {
-        int result = 1;
-        while (n > 1)
-            result *= n--;
-        return result;
-    }
-    
-    public void swap(char[] array, int first, int second) {
-        char tmp = array[first];
-        array[first] = array[second];
-        array[second] = tmp;
+        
+        char[] permuts = new char[n];
+        for (int i = 0; i < n; i++)
+            permuts[i] = (char)(i + '1');
+        k = k - 1;
+        for (int i = 0; i < n; i++) {
+            int index = i + (k/ (factorial[n - 1 - i]));
+            k %= factorial[n - 1 - i];
+            if (index == i)
+                continue;
+            char tmp = permuts[i];
+            permuts[i] = permuts[index];
+            permuts[index] = tmp;
+            Arrays.sort(permuts, i + 1, n);
+        }
+        
+        return new String(permuts);
     }
 }
